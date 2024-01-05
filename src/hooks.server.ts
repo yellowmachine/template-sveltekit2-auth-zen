@@ -11,20 +11,19 @@ import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
-async const authorization: Handle = ({ event, resolve }) {
-	// Protect any routes under /authenticated
+const authorization: Handle = async ({ event, resolve }) => {
+	
 	if (event.url.pathname.startsWith('/authenticated')) {
-   const session = await event.locals.getSession();
+        const session = await event.locals.getSession();
 		if (!session) {
 			throw redirect(303, '/auth');
 		}
 	}
 
-	// If the request is still here, just proceed as normally
 	return resolve(event);
 }
 
-const handleTRPC: Handle = createTRPCHandle({ router, createContext });
+const handleTRPC: Handle = createTRPCHandle({ url: "/authenticated/trpc", router, createContext });
 
 const handleAuth = SvelteKitAuth({
   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],

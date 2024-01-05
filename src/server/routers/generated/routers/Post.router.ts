@@ -17,6 +17,15 @@ export default function createRouter<Router extends RouterFactory<BaseConfig>, P
             ReturnType<PrismaClient['post']['aggregate']>
         >,
 
+        createMany: procedure
+            .input($Schema.PostInputSchema.createMany)
+            .mutation(async ({ ctx, input }) => checkMutate(db(ctx).post.createMany(input as any))) as ProcReturns<
+            'mutation',
+            Proc,
+            (typeof $Schema.PostInputSchema)['createMany'],
+            ReturnType<PrismaClient['post']['createMany']>
+        >,
+
         create: procedure
             .input($Schema.PostInputSchema.create)
             .mutation(async ({ ctx, input }) => checkMutate(db(ctx).post.create(input as any))) as ProcReturns<

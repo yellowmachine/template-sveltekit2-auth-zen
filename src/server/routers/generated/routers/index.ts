@@ -13,6 +13,9 @@ import { type PrismaClient, type Prisma } from '@prisma/client';
 import type z from 'zod';
 import createUserRouter from './User.router';
 import createPostRouter from './Post.router';
+import createAccountRouter from './Account.router';
+import createSessionRouter from './Session.router';
+import createVerificationTokenRouter from './VerificationToken.router';
 
 export { PrismaClient } from '@prisma/client';
 
@@ -72,5 +75,8 @@ export function createRouter<Router extends RouterFactory<BaseConfig>, Proc exte
     return router({
         user: createUserRouter<Router, Proc>(router, procedure),
         post: createPostRouter<Router, Proc>(router, procedure),
+        account: createAccountRouter<Router, Proc>(router, procedure),
+        session: createSessionRouter<Router, Proc>(router, procedure),
+        verificationToken: createVerificationTokenRouter<Router, Proc>(router, procedure),
     });
 }

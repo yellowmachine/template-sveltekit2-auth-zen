@@ -13,17 +13,22 @@ plugin trpc {
     output = 'src/server/routers/generated'
 }
 
-/**
- * User model
- */
-model User {
+abstract model Base {
+    id String @id @default(cuid())
+    //id Int @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+ 
+    //@@allow('all', auth() != null)
+}
+
+model User extends Base {
     name          String?
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
     
-    id String @id @default(cuid())
     email String? @unique @email
     password String @password @omit @length(8, 16)
     posts Post[]
@@ -35,13 +40,7 @@ model User {
     @@allow('all', auth() == this)
 }
 
-/**
- * Post model
- */
-model Post {
-    id String @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Post extends Base {
     title String @length(1, 256)
     content String
     published Boolean @default(false)
@@ -55,8 +54,7 @@ model Post {
     @@allow('all', author == auth())
 }
 
-model Account {
-  id                 String  @id @default(cuid())
+model Account extends Base {
   userId             String
   type               String
   provider           String
@@ -74,8 +72,7 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
-model Session {
-  id           String   @id @default(cuid())
+model Session extends Base {
   sessionToken String   @unique
   userId       String
   expires      DateTime
